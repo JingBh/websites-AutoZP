@@ -1,7 +1,6 @@
 <?php
 namespace JingBh\AutoZP;
 
-use Base64Url\Base64Url;
 use GuzzleHttp\Client;
 
 class BaiduOCR
