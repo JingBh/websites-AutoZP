@@ -32,7 +32,7 @@ class InviteCode
         if (empty($obj)) {
             return false;
         } elseif ($must_unused === true) {
-            return empty($obj->user);
+            return empty($obj->user());
         } else return true;
     }
 

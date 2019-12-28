@@ -27,9 +27,11 @@ class AutoZPInviteCode extends Model
     /**
      * 获取使用此邀请码的用户
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return AutoZPUser
      */
     public function user() {
-        return $this->belongsTo(AutoZPUser::class, "invite_code");
+        return AutoZPUser::where([
+            "invite_code" => $this->code
+        ])->first();
     }
 }
