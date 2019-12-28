@@ -16,6 +16,7 @@ class CreateAutoZPUserTable extends Migration
         Schema::create("autozp_user", function (Blueprint $table) {
             $table->char("id", 8)->primary();
             $table->char("invite_code", 8)->unique();
+            $table->text("password")->nullable();
             $table->timestamps();
         });
     }

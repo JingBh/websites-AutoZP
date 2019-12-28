@@ -2,6 +2,8 @@
 namespace JingBh\AutoZP;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use Psr\Http\Message\ResponseInterface;
 
 class WebSpider
 {
@@ -26,18 +28,13 @@ class WebSpider
                 "validateCode" => $validate_code
             ]
         ]);
-        $body = json_decode($response->getBody()->getContents());
-        return [
-            "success" => $body->success,
-            "code" => $body->code,
-            "message" => $body->message,
-            "token" => $body->success
-                ? $body->data->token : null
-        ];
+        return self::apiJsonResponse($response);
     }
 
     public static function userInfo($token) {
-
+        $client = self::http($token);
+        $response = $client->get("school/user/getUserInfo");
+        return self::apiJsonResponse($response);
     }
 
     /**
@@ -72,7 +69,14 @@ class WebSpider
         return file_get_contents($path);
     }
 
-    protected static function http($api=true, $token=null) {
+    /**
+     * 生成一个 Guzzle HTTP 客户端
+     *
+     * @param string|null $token Bearer Token
+     * @param bool $api 是否为调用 API
+     * @return Client
+     */
+    protected static function http($token=null, $api=true) {
         $options = [
             "base_uri" => $api
                 ? "http://gzzp.bjedu.cn:8004/"
@@ -92,5 +96,21 @@ class WebSpider
         }
 
         return new Client($options);
+    }
+
+    /**
+     * 将 API 响应转换为数组
+     *
+     * @param ResponseInterface $response
+     * @return array
+     */
+    protected static function apiJsonResponse($response) {
+        $body = json_decode($response->getBody()->getContents(), true);
+        return [
+            "success" => $body["success"],
+            "message" => $body["message"],
+            "data" => $body["success"]
+                ? $body["data"] : null
+        ];
     }
 }

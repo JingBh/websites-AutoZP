@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/bootstrap";
+
+body {
+    font-family: "Open Sans", "Noto Sans SC", sans-serif;
+}
+
+h1 {
+    img {
+        height: 2.5rem;
+    }
+}
+
+.hide {
+    display: none;
+}
+
+#headContainer {
+    #logoSection {
+        border-right: solid 2px gray("400");
+    }
+}

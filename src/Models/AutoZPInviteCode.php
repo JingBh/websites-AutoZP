@@ -20,12 +20,16 @@ class AutoZPInviteCode extends Model
 
     protected $keyType = "string";
 
+    protected $casts = [
+        "enabled" => "boolean"
+    ];
+
     /**
      * 获取使用此邀请码的用户
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user() {
-        return $this->belongsTo("AutoZPUser", "invite_code");
+        return $this->belongsTo(AutoZPUser::class, "invite_code");
     }
 }
