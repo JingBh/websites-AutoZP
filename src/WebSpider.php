@@ -2,7 +2,6 @@
 namespace JingBh\AutoZP;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\ResponseInterface;
 
 class WebSpider

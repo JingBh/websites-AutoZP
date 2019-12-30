@@ -1,6 +1,7 @@
 <?php
 namespace JingBh\AutoZP;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use JingBh\AutoZP\Models\AutoZPUser as Model;
@@ -33,6 +34,13 @@ class AutoZPUser
      */
     protected $userInfo = null;
 
+    /**
+     * 用户教育ID
+     *
+     * @var string
+     */
+    public $userId = "";
+
     public function __construct($token="") {
         $this->token = $token;
     }
@@ -47,6 +55,7 @@ class AutoZPUser
             try {
                 $response = WebSpider::userInfo($this->token);
                 $this->userInfo = $response["data"];
+                if (filled($this->userInfo)) $this->userId = $this->userInfo["userNumber"];
             } catch (\Exception $e) {
                 $this->userInfo = null;
             }
@@ -60,18 +69,15 @@ class AutoZPUser
      * @return Model
      */
     public function updateModel() {
-        $userInfo = $this->updateUserInfo();
-        if (filled($userInfo)) {
-            $id = $userInfo["userNumber"];
-            $obj = Model::find($id);
-            if (empty($obj)) {
-                $obj = new Model;
-                $obj->id = $id;
-                $obj->invite_code = InviteCode::getFromCookie();
-                $obj->save();
-            }
-            $this->obj = $obj;
+        $this->updateUserInfo();
+        $obj = Model::find($this->userId);
+        if (empty($obj)) {
+            $obj = new Model;
+            $obj->id = $this->userId;
+            $obj->invite_code = InviteCode::getFromCookie();
+            $obj->save();
         }
+        $this->obj = $obj;
         return $this->obj;
     }
 
@@ -86,10 +92,19 @@ class AutoZPUser
     }
 
     /**
-     * 将 Token 保存在 Session 中
+     * 将 Token 保存在 Session 和 Cache 中
      */
     public function saveToken() {
         Session::put("autozp_token", $this->token);
+        Cache::put("autozp_token_{$this->userId}", $this->token, 3600);
+    }
+
+    /**
+     * 将保存在 Session 和 Cache 中的 Token 删除
+     */
+    public function clearToken() {
+        Session::remove("autozp_token");
+        Cache::forget("autozp_token_{$this->userId}");
     }
 
     /**
@@ -126,16 +141,30 @@ class AutoZPUser
 
     /**
      * 登录综评系统
+     * 不填验证码时为自动识别
      *
-     * @param $username
-     * @param $password
+     * @param string $username
+     * @param string $password
+     * @param string|null $flag
+     * @param string|null $validateCode
      * @return array
      * @throws \Throwable
      */
-    public static function login($username, $password) {
+    public static function login($username, $password, $flag=null, $validateCode=null) {
         $user = Model::find($username);
         if (filled($user) || InviteCode::isValid(null, true)) {
-            $response = NoMoreValidateCode::getAndFuckIt($username, $password);
+            $token = Cache::get("autozp_token_{$username}");
+            if (blank($token)) {
+                if (filled($validateCode) && filled($flag)) {
+                    $response = WebSpider::login($username, $password, $flag, $validateCode);
+                } else $response = NoMoreValidateCode::getAndFuckIt($username, $password);
+            } else {
+                $response = [
+                    "success" => true,
+                    "message" => "已从缓存中获取登录信息",
+                    "data" => ["token" => $token]
+                ];
+            }
         } else $response = [
             "success" => false,
             "message" => "您的邀请码不能用来登录此账号。",
@@ -143,9 +172,16 @@ class AutoZPUser
         ];
         if ($response["success"] === true) {
             $response["object"] = new self($response["data"]["token"]);
+        } else $response["object"] = new self;
+        $response["object"]->userId = $username;
+        if ($response["object"]->isLoggedIn()) {
             $response["object"]->updateModel();
             $response["object"]->saveToken();
-        } else $response["object"] = new self;
+        } else {
+            $response["success"] = false;
+            $response["message"] = "这通常并不是您的错，请直接重试。";
+            $response["object"]->clearToken();
+        }
         return $response;
     }
 

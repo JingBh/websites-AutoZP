@@ -4,6 +4,7 @@ namespace JingBh\AutoZP\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use JingBh\AutoZP\AutoZPUser;
+use JingBh\AutoZP\WebSpider;
 
 class UserController extends Controller
 {
@@ -28,5 +29,10 @@ class UserController extends Controller
         if ($request->isMethod("GET")) {
             return redirect("/autozp");
         } else return response()->json([true, null]);
+    }
+
+    public function validateCode() {
+        $result = WebSpider::getValidateCode();
+        return response()->json([true, $result]);
     }
 }
