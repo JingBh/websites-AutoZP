@@ -9,11 +9,20 @@ use JingBh\AutoZP\Models\AutoZPUser as Model;
 class AutoZPUser
 {
     /**
-     * 用户名密码 Cookie 过期时间
+     * 用户名密码 Cookie 过期时间 (分钟)
+     * 此处为一个月
      *
      * @var int
      */
     const cookie_time = 60 * 24 * 30;
+
+    /**
+     * Token Cache 过期时间
+     * 此处为三小时
+     *
+     * @var int
+     */
+    const token_cache_ttl = 60 * 60 * 3;
 
     /**
      * @var string
@@ -96,7 +105,8 @@ class AutoZPUser
      */
     public function saveToken() {
         Session::put("autozp_token", $this->token);
-        Cache::put("autozp_token_{$this->userId}", $this->token, 3600);
+        Cache::put("autozp_token_{$this->userId}", $this->token,
+            self::token_cache_ttl);
     }
 
     /**
