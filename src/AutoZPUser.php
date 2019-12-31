@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use JingBh\AutoZP\Models\AutoZPUser as Model;
+use JingBh\AutoZP\Traits\StudentInfo;
 
 class AutoZPUser
 {
@@ -212,4 +213,6 @@ class AutoZPUser
         $token = Session::get("autozp_token");
         return $construct ? new self($token) : $token;
     }
+
+    use StudentInfo;
 }

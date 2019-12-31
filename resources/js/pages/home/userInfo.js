@@ -1,6 +1,6 @@
 $.get("user/info", function(data) {
-    // 根据是否有教育ID判断是否已登录
-    if (data["userNumber"]) {
+    // 判断是否已登录
+    if (data[1]) {
         $("#loginButton").slideUp(200);
         $("#logoutButton").slideDown(200)
             .removeAttr("disabled");

@@ -7,4 +7,7 @@ Route::post("invite_code/verify", "InviteCodeController@verify");
 
 Route::post("login", "UserController@login");
 Route::any("logout", "UserController@logout");
+Route::get("login/validateCode", "UserController@validateCode");
 Route::get("user/info", "UserController@userInfo");
+
+Route::get("terms", "StaticController@terms")->name("terms");

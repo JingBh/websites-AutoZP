@@ -19,3 +19,9 @@ h1 {
         border-right: solid 2px gray("400");
     }
 }
+
+#loginValidateCodeImage {
+    height: $input-height;
+    border-top-right-radius: $input-border-radius;
+    border-bottom-right-radius: $input-border-radius;
+}
