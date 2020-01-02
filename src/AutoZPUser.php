@@ -188,10 +188,11 @@ class AutoZPUser
         if ($response["object"]->isLoggedIn()) {
             $response["object"]->updateModel();
             $response["object"]->saveToken();
-        } else {
+        } elseif ($response["success"] === true) {
             $response["success"] = false;
             $response["message"] = "这通常并不是您的错，请直接重试。";
             $response["object"]->clearToken();
+            $response = self::login($username, $password, $flag, $validateCode);
         }
         return $response;
     }

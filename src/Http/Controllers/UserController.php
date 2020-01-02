@@ -18,10 +18,7 @@ class UserController extends Controller
             "gender" => $obj->getGender(),
             "school" => $obj->getSchool()
         ] : null;
-        return response()->json([true, $result, [
-            "raw" => $userInfo,
-            "obj" => $obj
-        ]]);
+        return response()->json([true, $result]);
     }
 
     public function login(Request $request) {

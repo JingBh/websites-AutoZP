@@ -1,7 +1,7 @@
 @extends("autozp::layouts.layout")
 
 @section("content")
-    <div class="container my-3 mt-md-5" id="headContainer">
+    <div class="container my-3 mt-md-5">
         <div class="row">
             <div class="col-auto col-sm" id="logoSection">
                 <h1 class="mb-1">@component("autozp::components.logo")@endcomponent</h1>
@@ -17,6 +17,15 @@
             <span class="spinner-border spinner-border-sm"></span>
             正在加载用户信息...
         </p>
+        <div class="hide" id="userInfo">
+            <div class="media">
+                <img class="mr-3" alt="综评系统默认头像" id="userAvatar">
+                <div class="media-body">
+                    <h3 class="mt-0 mb-1 font-weight-light" id="userName"></h3>
+                    <p class="my-0" id="userSchool"></p>
+                </div>
+            </div>
+        </div>
     </div>
     @component("autozp::components.modal")
         @slot("id", "loginModal")
@@ -31,7 +40,7 @@
                 <label for="loginInputPassword">密码</label>
                 <input type="password" class="form-control" id="loginInputPassword" placeholder="请输入密码" value="{{ Cookie::get("autozp_password") }}" required="required">
             </div>
-            <div class="form-group" id="loginValidateCodeGroup">
+            <div class="form-group hide" id="loginValidateCodeGroup">
                 <label for="loginInputValidateCode">验证码</label>
                 <input type="hidden" id="loginInputValidateFlag">
                 <div class="input-group">
