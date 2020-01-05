@@ -9,5 +9,6 @@ Route::post("login", "UserController@login");
 Route::any("logout", "UserController@logout");
 Route::get("login/validateCode", "UserController@validateCode");
 Route::get("user/info", "UserController@userInfo");
+Route::get("user/photo", "UserController@photo");
 
 Route::get("terms", "StaticController@terms")->name("terms");

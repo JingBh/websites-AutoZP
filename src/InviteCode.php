@@ -1,6 +1,7 @@
 <?php
 namespace JingBh\AutoZP;
 
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 use JingBh\AutoZP\Models\AutoZPInviteCode;
@@ -91,5 +92,14 @@ class InviteCode
      */
     public static function saveToCookie($code) {
         Cookie::queue(self::cookie_name, $code, self::cookie_time);
+    }
+
+    /**
+     * 清除 Cookie 中存储的邀请码
+     *
+     * @return void
+     */
+    public static function clearCookie() {
+        Cookie::queue(Cookie::forget(self::cookie_name));
     }
 }

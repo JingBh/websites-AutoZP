@@ -92,13 +92,31 @@ class AutoZPUser
     }
 
     /**
+     * 尝试获取学生照片
+     *
+     * @return string|null
+     */
+    public function getPhoto() {
+        $eduId = $this->userId;
+        $schoolId = $this->getSchoolId();
+        $year = $this->getGradeYear() + 3;
+        $cacheTime = 60 * 60 * 24 * 30; // A month
+        return Cache::remember("autozp_photo_{$eduId}", $cacheTime,
+            function() use ($eduId, $schoolId, $year) {
+                return WebSpider::photo($eduId, $schoolId, $year);
+            });
+    }
+
+    /**
      * 检查是否已登录
      *
      * @return bool
      */
     public function isLoggedIn() {
-        $this->updateUserInfo();
-        return filled($this->userInfo);
+        if (filled($this->token)) {
+            $this->updateUserInfo();
+            return filled($this->userInfo);
+        } else return false;
     }
 
     /**
@@ -176,11 +194,15 @@ class AutoZPUser
                     "data" => ["token" => $token]
                 ];
             }
-        } else $response = [
-            "success" => false,
-            "message" => "您的邀请码不能用来登录此账号。",
-            "data" => null
-        ];
+        } else {
+            InviteCode::clearCookie();
+            $response = [
+                "success" => false,
+                "message" => "您的邀请码不能用来登录此账号。",
+                "data" => null,
+                "reload" => true
+            ];
+        }
         if ($response["success"] === true) {
             $response["object"] = new self($response["data"]["token"]);
         } else $response["object"] = new self;

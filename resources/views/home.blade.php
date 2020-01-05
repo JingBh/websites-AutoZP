@@ -27,6 +27,7 @@
             </div>
         </div>
     </div>
+
     @component("autozp::components.modal")
         @slot("id", "loginModal")
         @slot("title", "登录综评系统")
@@ -69,6 +70,16 @@
         </div>
         @slot("footer")
             <button class="btn btn-primary hide" id="loginSubmit">登录</button>
+        @endslot
+    @endcomponent
+
+    @component("autozp::components.modal")
+        @slot("id", "photoConfirmModal")
+        @slot("title", "隐私确认")
+        <p class="mb-0">您是否同意AutoZP通过您的信息<abbr title="只是可能获取到">尝试查找</abbr>您的照片？</p>
+        <input type="hidden" id="inputPhotoConfirm" value="no">
+        @slot("footer")
+            <button class="btn btn-success" id="photoConfirm">同意</button>
         @endslot
     @endcomponent
 @endsection

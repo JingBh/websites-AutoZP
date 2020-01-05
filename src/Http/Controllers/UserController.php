@@ -30,7 +30,9 @@ class UserController extends Controller
         $result = AutoZPUser::login($username, $password, $flag, $validateCode);
         if ($result["success"] === true && $remember === true) {
             $result["object"]->savePassword($password);
-        } else $result["object"]->clearPassword();
+        } elseif ($result["object"]->isLoggedIn()) {
+            $result["object"]->clearPassword();
+        }
         return response()->json($result);
     }
 
@@ -45,5 +47,20 @@ class UserController extends Controller
         $result = WebSpider::getValidateCode();
         Arr::forget($result, ["image", "image_base64"]);
         return response()->json([true, $result]);
+    }
+
+    public function photo() {
+        $obj = AutoZPUser::getTokenFromSession();
+        if ($obj->isLoggedIn()) {
+            $photo = $obj->getPhoto();
+            if (filled($photo)) {
+                return response()->streamDownload(function() use ($photo) {
+                    echo $photo;
+                }, null, [
+                    "Content-Type" => "image/jpeg"
+                ], "inline");
+            }
+        }
+        return response("Photo not found.")->setStatusCode(404);
     }
 }

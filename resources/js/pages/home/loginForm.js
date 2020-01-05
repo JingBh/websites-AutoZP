@@ -30,6 +30,9 @@ $("#loginSubmit").click(function() {
         } else {
             $("#loginError").slideDown(200)
                 .children("span").text(data["message"]);
+            if (data["reload"]) window.setTimeout(function() {
+                location.reload();
+            }, 3000);
         }
     }).fail(function() {
         alert("请求出错，请稍后重试。");

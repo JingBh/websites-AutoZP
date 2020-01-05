@@ -1,5 +1,3 @@
-const avatarUrl = require("../../utils/images").avatar;
-
 $.get("user/info", function(data) {
     // 判断是否已登录
     if (data[1]) {
@@ -19,4 +17,4 @@ $.get("user/info", function(data) {
     $("#userInfoLoading").slideUp(200);
 });
 
-$("#userAvatar").attr("src", avatarUrl);
+require("./loadPhoto");

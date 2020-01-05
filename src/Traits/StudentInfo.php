@@ -1,8 +1,20 @@
 <?php
 namespace JingBh\AutoZP\Traits;
 
+use JingBh\AutoZP\SchoolsId;
+
 trait StudentInfo
 {
+    /**
+     * 获取学生姓名
+     *
+     * @return string
+     */
+    public function getName() {
+        $userInfo = $this->updateUserInfo();
+        return filled($userInfo) ? $userInfo["name"] : "";
+    }
+
     /**
      * 获取学生所在学校
      *
@@ -18,13 +30,15 @@ trait StudentInfo
     }
 
     /**
-     * 获取学生姓名
+     * 获取学校ID
+     * 不一定成功
      *
-     * @return string
+     * @return null|string
      */
-    public function getName() {
-        $userInfo = $this->updateUserInfo();
-        return filled($userInfo) ? $userInfo["name"] : "";
+    public function getSchoolId() {
+        $school = $this->getSchool();
+        $info = SchoolsId::get($school);
+        return $info["id"];
     }
 
     /**
@@ -53,5 +67,29 @@ trait StudentInfo
                 "term" => $userInfo["choolsemesterName"]
             ];
         } else return [];
+    }
+
+    /**
+     * 获取班级信息
+     *
+     * @return array
+     */
+    public function getClass() {
+        $userInfo = $this->updateUserInfo();
+        if (filled($userInfo)) {
+            return $userInfo["classList"][0];
+        } else return [];
+    }
+
+    /**
+     * 获取入学年份
+     * 不一定成功
+     *
+     * @return null|int
+     */
+    public function getGradeYear() {
+        $classInfo = $this->getClass();
+        $match = preg_match('/([0-9]*)级/', $classInfo["name"], $matches);
+        return $match == 1 ? intval($matches[1]) : null;
     }
 }

@@ -30,6 +30,12 @@ class WebSpider
         return self::apiJsonResponse($response);
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @param $token
+     * @return array
+     */
     public static function userInfo($token) {
         $client = self::http($token);
         $response = $client->get("school/user/getUserInfo");
@@ -53,6 +59,35 @@ class WebSpider
             "image_base64" => $body->data->imgsrc,
             "image" => $image
         ];
+    }
+
+    /**
+     * 获取照片，失败时返回null
+     *
+     * @param string $eduId 教育ID
+     * @param string $schoolId 学校ID
+     * @param int|string $year 毕业年份
+     * @return string|null
+     */
+    public static function photo($eduId, $schoolId, $year) {
+        $client = new Client([
+            "base_uri" => "http://211.153.80.221/static/cmisfolder/photos/",
+            "connect_timeout" => 30,
+            "headers" => [
+                "User-Agent" => "Mozilla/5.0 JWS AutoZPBot",
+                "Referer" => "http://211.153.82.39/usercenter/",
+                "Origin" => "http://211.153.80.221"
+            ],
+            "timeout" => 60
+        ]);
+        try {
+            $response = $client->get("2012003/{$year}/{$schoolId}/{$eduId}.jpg");
+            if ($response->getStatusCode() == 200) {
+                return $response->getBody()->getContents();
+            } else return null;
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     protected static function encryptPassword($password, $validate_code) {
