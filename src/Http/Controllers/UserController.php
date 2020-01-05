@@ -14,9 +14,20 @@ class UserController extends Controller
         $userInfo = $obj->updateUserInfo();
         $result = filled($userInfo) ? [
             "id" => $obj->userId,
-            "name" => $obj->getName(),
-            "gender" => $obj->getGender(),
-            "school" => $obj->getSchool()
+            "name" => $userInfo["name"],
+            "gender" => $userInfo["sex"],
+            "school" => $obj->getSchool(),
+            "term" => $obj->getTermInfo()
+        ] : null;
+        return response()->json([true, $result]);
+    }
+
+    public function userScore() {
+        $obj = AutoZPUser::getTokenFromSession();
+        $userScore = $obj->updateUserScore();
+        $result = filled($userScore) ? [
+            "score" => $userScore["score"],
+            "count" => $userScore["count"]
         ] : null;
         return response()->json([true, $result]);
     }
@@ -62,5 +73,17 @@ class UserController extends Controller
             }
         }
         return response("Photo not found.")->setStatusCode(404);
+    }
+
+    public function rank(Request $request) {
+        $custom = $request->get("custom", "no") === "yes";
+        $grade = $request->get("grade", "no") === "yes";
+        $obj = AutoZPUser::getTokenFromSession();
+        if ($custom) {
+            $params = $request->all(["orgId", "schoolyearId",
+                "schoolsemesterId", "gradeId", "classId"]);
+            $response = $obj->getRank(null, $params);
+        } else $response = $obj->getRank($grade);
+        return response()->json([true, $response]);
     }
 }

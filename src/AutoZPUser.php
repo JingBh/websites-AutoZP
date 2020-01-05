@@ -66,7 +66,24 @@ class AutoZPUser
                 $response = WebSpider::userInfo($this->token);
                 $this->userInfo = $response["data"];
                 if (filled($this->userInfo)) $this->userId = $this->userInfo["userNumber"];
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
+                $this->userInfo = null;
+            }
+        }
+        return $this->userInfo;
+    }
+
+    /**
+     * 从综评系统获取用户分数
+     *
+     * @return array|null
+     */
+    public function updateUserScore() {
+        if (blank($this->userInfo)) {
+            try {
+                $response = WebSpider::userScore($this->token);
+                $this->userInfo = $response["data"];
+            } catch (\Throwable $e) {
                 $this->userInfo = null;
             }
         }
@@ -101,10 +118,45 @@ class AutoZPUser
         $schoolId = $this->getSchoolId();
         $year = $this->getGradeYear() + 3;
         $cacheTime = 60 * 60 * 24 * 30; // A month
-        return Cache::remember("autozp_photo_{$eduId}", $cacheTime,
+        return Cache::remember("autozp_photo_{$eduId}_{$schoolId}_{$year}", $cacheTime,
             function() use ($eduId, $schoolId, $year) {
                 return WebSpider::photo($eduId, $schoolId, $year);
             });
+    }
+
+    /**
+     * 获取分数排名表
+     *
+     * @param null|bool $grade 是否获取全年级学生分数
+     * @param null|array $params 自定义请求参数
+     * @return array
+     */
+    public function getRank($grade=false, $params=null) {
+        if (blank($params)) {
+            $termInfo = $this->getTermInfo();
+            $params = [
+                "orgId" => $termInfo["orgId"],
+                "schoolyearId" => $termInfo["yearId"],
+                "schoolsemesterId" => $termInfo["semesterId"],
+                "gradeId" => $termInfo["gradeId"]
+            ];
+            if ($grade !== true) $params["classId"] = $termInfo["classId"];
+        }
+        try {
+            $response = WebSpider::rankTable($this->token, $params);
+            $data = $response["data"];
+            $result = [];
+            foreach ($data as $item) {
+                array_push($result, [
+                    "id" => $item["userNumber"],
+                    "name" => $item["name"],
+                    "score" => $item["rankScore"]
+                ]);
+            }
+            return $result;
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 
     /**

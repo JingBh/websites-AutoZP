@@ -21,8 +21,62 @@
             <div class="media">
                 <img class="mr-3" alt="综评系统默认头像" id="userAvatar">
                 <div class="media-body">
-                    <h3 class="mt-0 mb-1 font-weight-light" id="userName"></h3>
+                    <h3 class="my-0 font-weight-light" id="userName"></h3>
                     <p class="my-0" id="userSchool"></p>
+                    <p class="my-0">分数：<span id="userScore"><span class="spinner-border spinner-border-sm text-primary"></span></span></p>
+                </div>
+            </div>
+            <ul class="nav nav-tabs mt-3" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#rankTabPanel" role="tab">查询排名</a>
+                </li>
+            </ul>
+            <div class="tab-content mt-2">
+                <div class="tab-pane fade show active" id="rankTabPanel" role="tabpanel">
+                    <p>您可以在这里查询同学们的分数和排名。</p>
+                    <div class="form-group" id="switchRankGradeGroup">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="switchRankGrade">
+                            <label class="custom-control-label" for="switchRankGrade">包含全年级同学</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="switchRankCustom">
+                            <label class="custom-control-label" for="switchRankCustom">高级查询</label>
+                        </div>
+                    </div>
+                    <div class="form-group mt-n3 hide" id="inputRankParamsGroup">
+                        <div class="form-row">
+                            <div class="col-4">
+                                <label class="small text-muted" for="inputRankParam_orgId">orgId</label>
+                                <input type="text" class="form-control form-control-sm" id="inputRankParam_orgId">
+                            </div>
+                            <div class="col-3">
+                                <label class="small text-muted" for="inputRankParam_gradeId">gradeId</label>
+                                <input type="text" class="form-control form-control-sm" id="inputRankParam_gradeId">
+                            </div>
+                            <div class="col-5">
+                                <label class="small text-muted" for="inputRankParam_classId">classId</label>
+                                <input type="text" class="form-control form-control-sm" id="inputRankParam_classId">
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted" for="inputRankParam_schoolyearId">schoolyearId</label>
+                                <input type="text" class="form-control form-control-sm" id="inputRankParam_schoolyearId">
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted" for="inputRankParam_schoolsemesterId">schoolsemesterId</label>
+                                <input type="text" class="form-control form-control-sm" id="inputRankParam_schoolsemesterId">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary px-4" id="rankSubmit">查询</button>
+                    </div>
+                    <div class="hide" id="rankResult">
+                        <hr>
+                        <table class="table table-sm table-hover" id="rankTable"></table>
+                    </div>
                 </div>
             </div>
         </div>

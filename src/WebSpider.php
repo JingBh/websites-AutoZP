@@ -43,6 +43,34 @@ class WebSpider
     }
 
     /**
+     * 获取用户分数
+     *
+     * @param $token
+     * @return array
+     */
+    public static function userScore($token) {
+        $client = self::http($token);
+        $response = $client->get("record/getUserScoreAndCount");
+        return self::apiJsonResponse($response);
+    }
+
+    /**
+     * 获取分数排名表
+     *
+     * @param $token
+     * @param array $params URL查询参数
+     * @return array
+     */
+    public static function rankTable($token, $params=[]) {
+        $client = self::http($token);
+        if (!array_key_exists("num", $params)) $params["num"] = 10000;
+        $response = $client->get("statistics/studentRecord/ranking", [
+            "query" => $params
+        ]);
+        return self::apiJsonResponse($response);
+    }
+
+    /**
      * 获取综评系统登录验证码
      *
      * @return array

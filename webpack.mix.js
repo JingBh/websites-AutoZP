@@ -10,7 +10,8 @@ mix.extract(["axios", "jquery", "popper.js", "bootstrap"]);
 
 mix.sass("resources/sass/app.scss", "css");
 
-mix.js("resources/js/pages/home.js", "js")
-    .js("resources/js/pages/verify_invite", "js");
+mix.js("resources/js/pages/verify_invite", "js");
+
+mix.js("resources/js/pages/home.js", "js");
 
 mix.copyDirectory("resources/img", publicBase + "/img");

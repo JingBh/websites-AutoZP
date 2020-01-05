@@ -6,16 +6,6 @@ use JingBh\AutoZP\SchoolsId;
 trait StudentInfo
 {
     /**
-     * 获取学生姓名
-     *
-     * @return string
-     */
-    public function getName() {
-        $userInfo = $this->updateUserInfo();
-        return filled($userInfo) ? $userInfo["name"] : "";
-    }
-
-    /**
      * 获取学生所在学校
      *
      * @return string
@@ -42,29 +32,24 @@ trait StudentInfo
     }
 
     /**
-     * 获取学生性别
-     *
-     * @return string
-     */
-    public function getGender() {
-        $userInfo = $this->updateUserInfo();
-        return filled($userInfo) ? $userInfo["sex"] : "";
-    }
-
-    /**
      * 获取学年与学期信息
+     * 以及一些其它乱七八糟的信息
      *
      * @return array
      */
     public function getTermInfo() {
         $userInfo = $this->updateUserInfo();
+        $classInfo = $this->getClass();
         if (filled($userInfo)) {
-            // TODO: Should update Lesson Info.
             return [
+                "orgId" => $userInfo["orgId"],
+                "gradeId" => $userInfo["gradeId"],
+                "classId" => $classInfo["id"],
+                "class" => $classInfo["name"],
                 "yearId" => $userInfo["schoolyearId"],
-                "name" => $userInfo["schoolyearName"],
-                "id" => $userInfo["choolsemesterId"],
-                "term" => $userInfo["choolsemesterName"]
+                "year" => $userInfo["schoolyearName"],
+                "semesterId" => $userInfo["schoolsemesterId"],
+                "semester" => $userInfo["schoolsemesterName"]
             ];
         } else return [];
     }
