@@ -17,7 +17,7 @@ class WebSpider
      */
     public static function login($username, $password, $flag, $validate_code) {
         $client = self::http();
-        $encrypted_password = self::encryptPassword($password, $validate_code);
+        $encrypted_password = (new EncryptPassword)($password, $validate_code);
         $response = $client->post("auth/login", [
             "form_params" => [
                 "application" => "student",
@@ -116,19 +116,6 @@ class WebSpider
         } catch (\Throwable $e) {
             return null;
         }
-    }
-
-    protected static function encryptPassword($password, $validate_code) {
-        $key = self::getPublicKey();
-        $data = "{$validate_code}:{$password}";
-        $encrypt = openssl_public_encrypt($data, $encrypted, $key);
-        if ($encrypt) $encrypted = base64_encode($encrypted);
-        return $encrypted;
-    }
-
-    protected static function getPublicKey() {
-        $path = realpath(__DIR__ . "/../keys/password-encrypt.pem");
-        return file_get_contents($path);
     }
 
     /**
