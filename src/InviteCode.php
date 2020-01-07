@@ -1,8 +1,8 @@
 <?php
 namespace JingBh\AutoZP;
 
-use Illuminate\Cookie\CookieJar;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use JingBh\AutoZP\Models\AutoZPInviteCode;
 
@@ -82,7 +82,8 @@ class InviteCode
      * @return string|null
      */
     public static function getFromCookie() {
-        return Cookie::get(self::cookie_name, null);
+        $request = Request::input("invite_code");
+        return Cookie::get(self::cookie_name, $request);
     }
 
     /**
