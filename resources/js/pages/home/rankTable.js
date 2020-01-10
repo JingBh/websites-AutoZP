@@ -1,9 +1,3 @@
-require("datatables.net");
-require("datatables.net-bs4");
-require("datatables.net-fixedheader-bs4");
-
-const dataTableLang = require("../../utils/datatables_langs/zh_CN");
-
 const params = {
     "orgId": "orgId",
     "schoolyearId": "yearId",
@@ -12,11 +6,11 @@ const params = {
     "classId": "classId"
 };
 
-window.onUserInfoReady = function() {
+window.onUserInfoReady.push(function() {
     for (let param in params) {
         $("#inputRankParam_" + param).val(window._userInfo["term"][params[param]]);
     }
-};
+});
 
 $("#switchRankCustom").change(function() {
     if (this.checked === true) {
@@ -40,7 +34,6 @@ $("#rankSubmit").click(function() {
         }
     } else p["grade"] = $("#switchRankGrade")[0].checked ? "yes" : "no";
     $.get("user/rank", p).done(function(data) {
-        console.log(data[1]);
         let api = $("#rankTable").DataTable();
         api.clear();
         api.rows.add(data[1]);
@@ -71,6 +64,5 @@ $("#rankTable").DataTable({
     pageLength: 15,
     lengthChange: false,
     info: false,
-    pagingType: "simple",
-    language: dataTableLang
+    pagingType: "simple"
 });

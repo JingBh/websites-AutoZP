@@ -10,8 +10,22 @@ h1 {
     }
 }
 
+table.table {
+    width: 100% !important;
+}
+
+table.table.text-nowrap {
+    .dtr-details td:last-child {
+        white-space: normal !important;
+    }
+}
+
 .hide {
     display: none;
+}
+
+.limit-1 {
+    max-width: 10rem !important;
 }
 
 #logoSection {

@@ -71,6 +71,28 @@ class WebSpider
     }
 
     /**
+     * 获取历史记录表
+     *
+     * @param $token
+     * @param array $params
+     * @return array
+     */
+    public static function records($token, $params=[]) {
+        $defaults = [
+            "sortField" => "submittedDate",
+            "sortType" => "-1",
+            "pageIndex" => "1",
+            "submittedSelf" => "",
+            "pageSize" => "10000"
+        ];
+        $client = self::http($token);
+        $response = $client->get("record/published/getListPage", [
+            "query" => array_merge($defaults, $params)
+        ]);
+        return self::apiJsonResponse($response);
+    }
+
+    /**
      * 获取综评系统登录验证码
      *
      * @return array

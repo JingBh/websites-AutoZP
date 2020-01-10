@@ -160,6 +160,42 @@ class AutoZPUser
     }
 
     /**
+     * 获取历史记录表
+     *
+     * @param null|array $params 请求参数
+     * @return array
+     */
+    public function getRecords($params=[]) {
+        $termInfo = $this->getTermInfo();
+        if (filled($termInfo)) $params = array_merge([
+            "schoolyearId" => $termInfo["yearId"],
+            "schoolsemesterId" => $termInfo["semesterId"]
+        ], $params);
+        try {
+            $response = WebSpider::records($this->token, $params);
+            $result = [];
+            $data = $response["data"]["list"];
+            if (filled($data))
+                foreach ($data as $item) {
+                    array_push($result, [
+                        "id" => $item["id"],
+                        // "category" => $item["categoryId"],
+                        // "template" => $item["recordTemplate"],
+                        "title" => $item["title"],
+                        "content" => $item["content"],
+                        "date" => $item["submittedDate"],
+                        "score" => $item["score"],
+                        "submitter" => $item["submitterName"],
+                        "attachments" => Attachment::parseAttachmentsList($item["attachments"] ?? [])
+                    ]);
+                }
+            return $result;
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    /**
      * 检查是否已登录
      *
      * @return bool

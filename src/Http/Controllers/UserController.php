@@ -9,29 +9,6 @@ use JingBh\AutoZP\WebSpider;
 
 class UserController extends Controller
 {
-    public function userInfo() {
-        $obj = AutoZPUser::getTokenFromSession();
-        $userInfo = $obj->updateUserInfo();
-        $result = filled($userInfo) ? [
-            "id" => $obj->userId,
-            "name" => $userInfo["name"],
-            "gender" => $userInfo["sex"],
-            "school" => $obj->getSchool(),
-            "term" => $obj->getTermInfo()
-        ] : null;
-        return response()->json([true, $result]);
-    }
-
-    public function userScore() {
-        $obj = AutoZPUser::getTokenFromSession();
-        $userScore = $obj->updateUserScore();
-        $result = filled($userScore) ? [
-            "score" => $userScore["score"],
-            "count" => $userScore["count"]
-        ] : null;
-        return response()->json([true, $result]);
-    }
-
     public function login(Request $request) {
         $username = $request->post("username");
         $password = $request->post("password");
@@ -60,6 +37,34 @@ class UserController extends Controller
         return response()->json([true, $result]);
     }
 
+    public function getToken() {
+        $token = AutoZPUser::getTokenFromSession(false);
+        return response($token)->header("Content-Type", "text/plain");
+    }
+
+    public function userInfo() {
+        $obj = AutoZPUser::getTokenFromSession();
+        $userInfo = $obj->updateUserInfo();
+        $result = filled($userInfo) ? [
+            "id" => $obj->userId,
+            "name" => $userInfo["name"],
+            "gender" => $userInfo["sex"],
+            "school" => $obj->getSchool(),
+            "term" => $obj->getTermInfo()
+        ] : null;
+        return response()->json([true, $result]);
+    }
+
+    public function userScore() {
+        $obj = AutoZPUser::getTokenFromSession();
+        $userScore = $obj->updateUserScore();
+        $result = filled($userScore) ? [
+            "score" => $userScore["score"],
+            "count" => $userScore["count"]
+        ] : null;
+        return response()->json([true, $result]);
+    }
+
     public function photo() {
         $obj = AutoZPUser::getTokenFromSession();
         if ($obj->isLoggedIn()) {
@@ -84,6 +89,19 @@ class UserController extends Controller
                 "schoolsemesterId", "gradeId", "classId"]);
             $response = $obj->getRank(null, $params);
         } else $response = $obj->getRank($grade);
+        return response()->json([true, $response]);
+    }
+
+    /**
+     * 从 Session 中获取当前 Token
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function records(Request $request) {
+        $obj = AutoZPUser::getTokenFromSession();
+        $params = $request->all();
+        $response = $obj->getRecords($params);
         return response()->json([true, $response]);
     }
 }

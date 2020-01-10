@@ -2,7 +2,10 @@ $.get("user/info", function(data) {
     // 判断是否已登录
     if (data[1]) {
         let info = window._userInfo = data[1];
-        if (window.onUserInfoReady) window.onUserInfoReady();
+        for (let i in window.onUserInfoReady) {
+            window.onUserInfoReady[i]();
+        }
+
         $("#userName").text(info["name"]);
         $("#userSchool").text(info["school"]);
         $("#loginButton").slideUp(200);

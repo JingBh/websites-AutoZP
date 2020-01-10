@@ -28,11 +28,25 @@
             </div>
             <ul class="nav nav-tabs mt-3" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#rankTabPanel" role="tab">查询排名</a>
+                    <a class="nav-link active" data-toggle="tab" href="#recordsTabPanel" role="tab">记录</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#rankTabPanel" role="tab">排名</a>
+                </li>
+                <!--开发中
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#uploadTabPanel" role="tab">上传</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#planTabPanel" role="tab">计划</a>
+                </li>-->
             </ul>
             <div class="tab-content mt-2">
-                <div class="tab-pane fade show active" id="rankTabPanel" role="tabpanel">
+                <div class="tab-pane fade show active" id="recordsTabPanel" role="tabpanel">
+                    <p id="recordsLoading"><span class="spinner-border spinner-border-sm text-primary"></span> 正在加载，请稍候...</p>
+                    <table class="table table-hover text-nowrap" id="recordsTable"></table>
+                </div>
+                <div class="tab-pane fade" id="rankTabPanel" role="tabpanel">
                     <p>您可以在这里查询同学们的分数和排名。</p>
                     <div class="form-group" id="switchRankGradeGroup">
                         <div class="custom-control custom-switch">
@@ -75,9 +89,12 @@
                     </div>
                     <div class="hide" id="rankResult">
                         <hr>
-                        <table class="table table-sm table-hover" id="rankTable"></table>
+                        <table class="table table-hover table-sm text-nowrap" id="rankTable"></table>
                     </div>
                 </div>
+                <!--开发中
+                <div class="tab-pane fade" id="uploadTabPanel" role="tabpanel"></div>
+                <div class="tab-pane fade" id="planTabPanel" role="tabpanel"></div>-->
             </div>
         </div>
     </div>
