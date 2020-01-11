@@ -140,7 +140,7 @@
             <p class="text-success mb-0 mt-2 hide" id="loginSuccess">登录成功，正在自动<a href="javascript:location.reload();">跳转</a>...</p>
         </div>
         @slot("footer")
-            <button class="btn btn-primary hide" id="loginSubmit">登录</button>
+            <button class="btn btn-primary hide" id="loginSubmit" disabled="disabled">登录</button>
         @endslot
     @endcomponent
 
