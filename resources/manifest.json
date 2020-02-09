@@ -1,12 +1,12 @@
 {
-    "name": "AutoZP",
+    "name": "AutoZP - 一个极简综评客户端",
+    "short_name": "AutoZP",
     "description": "一个极简综评客户端",
     "start_url": "/autozp/",
     "display": "standalone",
     "orientation": "portrait",
     "scope": "/autozp",
     "background_color": "#efefef",
-    "theme_color": "#27a2fc",
     "dir": "ltr",
     "lang": "zh-CN",
     "icons": [
