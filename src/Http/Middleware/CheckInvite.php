@@ -16,7 +16,7 @@ class CheckInvite
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->is("autozp/invite_code*") || InviteCode::isValid()) {
+        if ($request->is("autozp/*") || InviteCode::isValid()) {
             return $next($request);
         } else return redirect("autozp/invite_code");
     }

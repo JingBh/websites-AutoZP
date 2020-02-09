@@ -1,6 +1,7 @@
 <?php
 
 Route::get("/", "HomeController@home");
+Route::get("/manifest.json", "HomeController@manifest");
 
 Route::get("invite_code", "InviteCodeController@show");
 Route::post("invite_code/verify", "InviteCodeController@verify");
