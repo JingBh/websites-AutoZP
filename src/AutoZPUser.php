@@ -15,7 +15,7 @@ class AutoZPUser
      *
      * @var int
      */
-    const cookie_time = 60 * 24 * 30;
+    const cookieTime = 60 * 24 * 30;
 
     /**
      * Token Cache 过期时间
@@ -23,12 +23,7 @@ class AutoZPUser
      *
      * @var int
      */
-    const token_cache_ttl = 60 * 60 * 3;
-
-    /**
-     * @var string
-     */
-    protected $token = "";
+    const tokenCacheTime = 60 * 60 * 3;
 
     /**
      * 用户模型
@@ -43,6 +38,11 @@ class AutoZPUser
      * @var array|null
      */
     protected $userInfo = null;
+
+    /**
+     * @var string
+     */
+    public $token = "";
 
     /**
      * 用户教育ID
@@ -213,7 +213,7 @@ class AutoZPUser
     public function saveToken() {
         Session::put("autozp_token", $this->token);
         Cache::put("autozp_token_{$this->userId}", $this->token,
-            self::token_cache_ttl);
+            self::tokenCacheTime);
     }
 
     /**
@@ -238,8 +238,8 @@ class AutoZPUser
             $obj->save();
         }
         $this->obj = $obj;
-        Cookie::queue("autozp_username", $obj->id, self::cookie_time);
-        Cookie::queue("autozp_password", $obj->password, self::cookie_time);
+        Cookie::queue("autozp_username", $obj->id, self::cookieTime);
+        Cookie::queue("autozp_password", $obj->password, self::cookieTime);
     }
 
     /**

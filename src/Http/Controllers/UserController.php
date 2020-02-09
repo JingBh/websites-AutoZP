@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use JingBh\AutoZP\AutoZPUser;
+use JingBh\AutoZP\RecordTemplate;
 use JingBh\AutoZP\WebSpider;
 
 class UserController extends Controller
@@ -37,9 +38,19 @@ class UserController extends Controller
         return response()->json([true, $result]);
     }
 
+    /**
+     * 从 Session 中获取当前 Token
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getToken() {
         $token = AutoZPUser::getTokenFromSession(false);
         return response($token)->header("Content-Type", "text/plain");
+    }
+
+    public function templates() {
+        $response = (new RecordTemplate())->getList();
+        return response()->json([true, $response]);
     }
 
     public function userInfo() {
@@ -92,12 +103,6 @@ class UserController extends Controller
         return response()->json([true, $response]);
     }
 
-    /**
-     * 从 Session 中获取当前 Token
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function records(Request $request) {
         $obj = AutoZPUser::getTokenFromSession();
         $params = $request->all();

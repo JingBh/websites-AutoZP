@@ -112,6 +112,18 @@ class WebSpider
     }
 
     /**
+     * 获取模板列表
+     *
+     * @param $token
+     * @return array
+     */
+    public static function getTemplateList($token) {
+        $client = self::http($token);
+        $response = $client->get("admin/category/getUpAllAndTemByUser");
+        return self::apiJsonResponse($response);
+    }
+
+    /**
      * 获取照片，失败时返回null
      *
      * @param string $eduId 教育ID
