@@ -13,4 +13,10 @@ class HomeController extends Controller
     public function home() {
         return view("autozp::home");
     }
+
+    public function manifest() {
+        return response()->file(__DIR__ . "/../../../resources/manifest.json", [
+            "Content-Type" => "application/manifest+json"
+        ]);
+    }
 }

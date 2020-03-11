@@ -73,7 +73,7 @@ function loadRecordsTable() {
         // Auto redraw on resize.
         $(window).resize(function() {
             window.setTimeout(function() {
-                $("#recordsTable").DataTable().draw();
+                $("#recordsTable").DataTable().columns.adjust();
             }, 200);
         });
     }).fail(function() {
